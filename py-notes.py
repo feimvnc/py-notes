@@ -148,6 +148,18 @@ while stack:
     print(stack.pop(), end = ' ')    # 9 8 7 6 5 4 3 2 1 0 
 
 
+# heapsort
+from heapq import heappush, heappop 
+def heapsort(iterable):
+    h = [] 
+    for value in iterable: 
+        heappush(h, value)
+    return [heappop(h) for i in range(len(h))]
+
+print("\n", heapsort([2,3,1,5]))
+# [1, 2, 3, 5]
+
+
 # bfs graph traversal, queue, list 
 def bfs(graph, node):
     visited = [] 
@@ -255,6 +267,10 @@ def binary_search(nums, k) -> bool:
             return True
     return False
 
+    # while left < right:   # for [2,2] condition
+    #     # ...
+    # return left if nums[left] == target else -1
+
 nums = [ i for i in range(10)]
 k = 3
 print(binary_search(nums, k))
@@ -309,9 +325,205 @@ print(f"builtin_isqrt: {timeit.timeit('builtin_isqrt(22)', number=10000, globals
 # print array from last index len(freq)-1, up to 0 excluding -1, in descending order -1 
 nums = [n for n in range(5)]    # [0, 1, 2, 3, 4]
 for index in range(len(nums)-1, -1, -1):
-    print(f'{index=}, {nums[i]=}')
+    print(f'{index=}, {nums[index]=}')
 # index=4, nums[i]=0
 # index=3, nums[i]=0
 # index=2, nums[i]=0
 # index=1, nums[i]=0
 # index=0, nums[i]=0
+
+
+# python vs C, reverseLeftWords
+# python 
+def reverseLeftWords(s: str, n: int) -> str:
+    return s[n:] + s[:n]
+
+# C 
+''' 
+char *reverseSelectWords(char *s, int n)
+{
+    int len = strlen(s), k=0;
+    char *res = malloc((len+1) * sizeof(char));
+    char *p = s + n;
+    for (int i  = 0; i < len - n, i++)
+    {
+        res[k++] = p[i]
+    }
+    for (int i=0; i  < n; i++)
+    {
+        res[k++] = s[i];
+    }
+    res[k] = '\0';
+    return res;
+}
+'''
+
+
+# recursion: an approach to solving problems using a function that calls itself as a subroutine.
+# most common usages: memorization, divide and conquer, backtracking
+# def recursion(arguments):
+#     base case:    # termination 
+#     recursion_relation    # divide big into small 
+""" 
+cache = dict()    # initialize cache (same as a dict)
+
+def foo(arg):
+    if arg in cache:
+        return cach[arg]
+    # base condition
+    # recursion relation
+    cache[arg] = result 
+"""
+# fibonacci number 
+# no memorization 
+def fib_recur(n):
+    if n<2: 
+        return n
+    else: 
+        return fib_recur(n-1)+fib_recur(n-2)
+
+# with memorization
+cache = dict()
+def fib_cache(n):
+    if n in cache: 
+        return cache[n]
+    if n < 2:
+        result = n 
+    else: 
+        result = fib_cache(n-1) + fib_cache(n-2)
+    cache[n] = result 
+    return result 
+
+
+## string comparison  
+def strcmp(s1, s2):
+    i1, i2 =0, 0
+    while i1 < len(s1) and i2 < len(s2):
+        if ord(s1[i1]) == ord(s2[i2]):
+            i1 += 1
+            i2 += 1
+        elif ord(s1[i1]) < ord(s2[i2]):
+            return -1
+        else:
+            return 1 
+        
+        if len(s1) < len(s2):
+            return -1
+        elif len(s1) > len(s2):
+            return 1
+        else:
+            return 0
+
+print(strcmp('hello', 'hello'))
+print(strcmp('hello', 'world'))
+# 0
+# -1
+
+
+# Type hinting 
+from typing import Sequence, Tuple, Any 
+# Sequence: simpliest abstract base class that supports __getitem__ syntax
+# Any: generic type 
+def  get_first_and_last(x: Sequence[Any]) -> Tuple[Any, Any]:
+    return (x[0], x[-1])
+
+print(get_first_and_last([1,2,3,4,5]))
+# (1, 5)
+
+
+## map for broadcast operation
+print(list(map(str.upper, 'hello')))
+print(list(map(pow, [1,2,3,4,5],[2,2,2,2,2])))    # requires two lists for pow
+# ['H', 'E', 'L', 'L', 'O']
+# [1, 4, 9, 16, 25]
+
+def transform_double(base: int) -> int:
+    return base * base
+print(list(map(transform_double, [1,2,3,4,5])))
+# [1, 4, 9, 16, 25]
+
+def is_iterable(iterable: Any) -> bool:  
+    try:
+        iter(iterable)
+        return True 
+    except TypeError:
+        return False 
+
+print(list(map(is_iterable, [1, [2,3], 3.14, 'hello'])))
+# [False, True, False, True]
+
+
+# functools cache
+from functools import cache, lru_cache 
+@cache     # return the same and faster than lru_cache
+def fac(n: int) -> int:
+    return n * fac(n-1) if n else 1
+
+@lru_cache(maxsize=None)
+def count_vowels(s: str) -> int:
+    return sum(s.count(vowel) for vowel in 'AEIOUaeioe')
+
+print(fac(10))
+print(count_vowels("mississippi"))
+print(fac.cache_info())
+print(count_vowels.cache_info())
+# 3628800
+# 4
+# CacheInfo(hits=0, misses=11, maxsize=None, currsize=11)
+# CacheInfo(hits=0, misses=1, maxsize=128, currsize=1)
+
+
+# partial is used in function which freezes portion of argument is freezed
+from functools import partial 
+bin2int = partial(int, base=2)
+hex2int = partial(int, base=16)
+bin2int.__doc__ = "Convert base 2 string to an int"
+hex2int.__doc__ = "Convert base 16 string to an int"
+print(bin2int('1010'))
+print(hex2int('10'))
+# 10
+# 16
+
+
+# reduce apply function of two arguments cumulativelly to items of iterables 
+from functools import reduce 
+# equivalent to ((((1+2)+3)4)+5), + can be -, *, /
+print(reduce(lambda x, y: x + y, [1,2,3,4,5]))
+# 15
+
+
+# Path write and read a file 
+from pathlib import Path 
+# write a file
+p = Path('test.txt')
+p.write_text('hello world path')
+print(p.exists()) 
+# read a file 
+q = Path('test.txt')
+with p.open() as f: print(f.readline())
+# True
+# hello world path
+
+
+# tempfile create secure file in memory 
+import tempfile 
+fp = tempfile.TemporaryFile()
+fp.write(b'hello world')
+fp.seek(0)
+print(fp.read())
+fp.close()     # file is deleted and removed from meory
+# b'hello world'
+
+
+# pickle python object serialization, pickle is not secure, only unpickle data you trust
+import pickle 
+data = [i for i in range(10)]
+with open('data.pickle', 'wb') as f:
+    pickle.dump(data, f, pickle.HIGHEST_PROTOCOL)
+
+with open('data.pickle',  'rb') as f:
+    data = pickle.load(f)
+    print(data)
+# [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+
+

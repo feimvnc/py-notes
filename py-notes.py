@@ -676,3 +676,33 @@ digits = [int(d) for d in str(num)]
 for digit in digits:
     print(digit, end=' ')
 # 1 2 3 4 5
+
+
+# sys.maxsize, smallest int
+import sys 
+print(sys.maxsize)        # -> 9223372036854775807
+print(-(sys.maxsize-1))   # -> -9223372036854775806
+print(bin(sys.maxsize))   # -> 0b111111111111111111111111111111111111111111111111111111111111111
+print(hex(sys.maxsize))   # -> 0x7fffffffffffffff
+
+# sys.maxsize is not the maximum value of int, 
+# you can handle larger values as long as there is available memory.
+# The floating-point number (float) represents infinity as inf. 
+# In comparisons, inf is considered larger than any int value.
+i = 10**100
+print(i)   # 10000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+print(i > sys.maxsize)  # -> True 
+print(float('inf'))     # inf
+print(i > float('inf')) # False, inf is considered larger than any int value.
+
+
+# print in color 
+# print("\033[96mhello")    # blue 
+# print("\033[91mworld")    # red 
+
+
+# global vs local 
+def func():
+    data_f = [] 
+    print('data_f' in locals(), 'data_f' in globals())   # True False
+func()

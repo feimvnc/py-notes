@@ -5,8 +5,18 @@ keep some useful python snippets for references
 https://docs.python.org/dev/download.html
 """
 
+# problem solving general steps
+""" 
+1. State the problem clearly, identify the input and output formats.
+2. Come up with examples inputs and outputs, cover all edge cases.
+3. State solution in plain English.
+4. Implement and test using example inputs, fix bugs if any.
+5. Analyze algorithm complexity and identify inefficiencies if any.
+6. Apply technique to overcome the inefficiency.
+"""
 
 # random integer generation k=10 
+from encodings import utf_8
 from random import choices
 arr = choices(range(10), k=10)       # when use [choices], it will be [[2,2,...]]
 print(f"{arr=}")
@@ -261,7 +271,7 @@ def binary_search(nums, k) -> bool:
         m = ( l + r ) // 2 
         if k > nums[m]:
             l = m + 1
-        elif k < nums[m]:
+        elif k < nums[m]:  # easy to read when explicitly written
             r = m - 1 
         else:    # k = nums[m] condition 
             return True
@@ -275,6 +285,22 @@ nums = [ i for i in range(10)]
 k = 3
 print(binary_search(nums, k))
 # True
+
+
+# linear search 
+from typing import List 
+def linear_search(nums: List[int], k: int) -> int:
+    position = 0 
+    while position < len(nums):
+        if nums[position] == k:
+            return position
+        position += 1 
+    return position 
+
+nums = [ i for i in range(10)]
+k = 3
+print("linear_search ", linear_search(nums, k))
+# linear_search  3
 
 
 # maximum sum of contiguous subarray, kadane algorithm 
@@ -527,3 +553,126 @@ with open('data.pickle',  'rb') as f:
 # [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
 
 
+# list creation of same item, potential bugs
+a = [0] * 10      # this is fine, integer is immutable, False/True also works, f = [False] * 10
+a[0] = 100
+print(a)          # [100, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+
+b = [[]] * 10     # code bug, [] is mutable
+b[0].append(10)   # * BUG *, because each item points to same underline list
+print(b)          # #[[10], [10], [10], [10], [10], [10], [10], [10], [10], [10]]
+
+# recommended approach to create common empty list, use range()
+l3 = [ [] for _ in range(10) ]    # use _ so other know no var is introduced
+l3[0].append(1)
+print(l3)         # only l3[0] has the value 
+# [[1], [], [], [], [], [], [], [], [], []]
+
+
+# password generation, length 10, lower char > 1, upper char >  1, digits >=3
+import string 
+import secrets 
+def generate_pass(length: int) -> str:
+    alphabet = string.ascii_letters + string.digits 
+    p = ''
+    while True:
+        p = ''.join(secrets.choice(alphabet) for i in range(10))
+        if (any(c.islower() for c in p)
+            and any(c.isupper() for c in p)
+            and sum(c.isdigit() for c in p) >= 3 ):    # sum >= 3 
+            break 
+    return p
+
+print(generate_pass(10))
+# dkkY89xfJ3
+
+
+# file listing excluding directory and '.'
+import os 
+def get_files_only(path_name: str):
+    with os.scandir(path_name) as it:
+        for entry in it:
+            # exclue "." files and directory
+            if not entry.name.startswith('.') and entry.is_file():
+                print(entry.name)
+
+get_files_only('.')
+
+
+# json loads() and dumps()
+# import json 
+# json.loads('a', utf_8)
+# json.loads("['a', {'b':['c', 42]}]")
+# json.dumps("['a', {'b':['c', 42]}]")
+
+
+# base64  .b64encode and .b64decode
+import base64
+encoded = base64.b64encode(b'hello')
+print(f'{encoded=}')
+data  = base64.b64decode(encoded)
+print(f'{data=}')
+
+# encoded=b'aGVsbG8='
+# data=b'hello'
+
+
+# python profiler, compute the hidden overhead per profiler event, return floats
+import profile 
+pr = profile.Profile()
+for i in range(5):
+    print(pr.calibrate(10000))
+
+
+# class __repr__ and __str__ representation
+class User:
+    def __init__(self, name, age):
+        self.name = name 
+        self.age = age 
+        
+    def __repr__(self):
+        return f'{self.name=}, {self.age=}'
+    
+    def __str__(self):
+        return self.__repr__()
+
+user = User("John", 42)
+print(user)
+# self.name='John', self.age=42
+
+
+# Tree node and properties
+class TreeNode():
+    def __init__(self, key):
+        self.key, self.left, self.right = key, None, None
+
+    def tree_height(node):
+        if node is None:
+            return 0 
+        return 1 + max(TreeNode.tree_height(node.left), TreeNode.tree_height(node.right))
+        
+    def tree_size(node):
+        if node is None:
+            return 0 
+        return 1 + TreeNode.tree_size(node.left) + TreeNode.tree_size(node.right)
+
+    def traverse_in_order(node):
+        if node is None:
+            return []
+        return (TreeNode.traverse_in_order(node.left) + 
+                [node.key] + 
+                TreeNode.traverse_in_order(node.right))
+
+
+# ASCII codes 
+for b in b'0AaZz':
+    print(b, end=' ')
+# 48 65 97 90 122 
+
+
+# digit print individual digit
+num = 12345
+digits = [int(d) for d in str(num)]
+for digit in digits:
+    print(digit, end=' ')
+# 1 2 3 4 5

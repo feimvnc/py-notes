@@ -136,6 +136,26 @@ def merge_sort_1(nums: List[int]) -> List[int]:
 
     return nums
 
+
+# merge two sorted array 
+def merge_sorted_array(left, right):
+    result = [] 
+    i, j =  0, 0
+    while i < len(left) and j < len(right):   # use and for longest common length
+        if (left[i] < right[j]):
+            result.append(left[i])
+            i += 1  # increment left 
+        else:
+            result.append(right[j])
+            j += 1  # increment right  
+    
+    result += left[i:]   # remainder of array if length of left and right not equal
+    result += right[j:]
+
+    return result 
+
+
+
 nums = [3,2,4,1,7,5,6]
 print(f"{nums=}")
 print(merge_sort_no_var(nums)) 

@@ -129,6 +129,9 @@ def sum_of_squares(it):
     # sum_of_squares([1,2,3]) -> 1 + 4 + 9 = 14
     # it = itertools.tee([1,2,3])
     # [list(c) for c in it]    ->  [[1, 2, 3], [1, 2, 3]]
+    # itertools.tee(iter, [n]) replicates an iterator; it returns 
+    # n independent iterators that will all return the con- tents of the 
+    # source iterator. If you don’t supply a value for n, the default is 2.
     return sumprod(*itertools.tee(it))
 
 def transpose(it):

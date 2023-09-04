@@ -510,6 +510,14 @@ print(hex2int('10'))
 # 10
 # 16
 
+# partial reducing function arguments 
+def pow(base, exponent):
+    return base ** exponent 
+square = partial(pow, exponent=2)    # partial 
+cube = partial(pow, exponent=3)
+print(square(5))   # 25 
+print(cube(5))    # 125
+
 
 # reduce apply function of two arguments cumulativelly to items of iterables 
 from functools import reduce 
@@ -706,3 +714,97 @@ def func():
     data_f = [] 
     print('data_f' in locals(), 'data_f' in globals())   # True False
 func()
+
+
+# Use strings to call functions/methods
+def a(): 
+    print('a')
+def b(): 
+    print('b')
+    
+dispatch = {'go': a, 'stop': b} 
+dispatch['stop']()
+
+
+# bin(), oct(), hex() , bin, oct, hex to int 
+print(0b1010, 0o12, 0xa, 0b1010, 0o12, 0xa)   # -> 10 10 10 10 10 10
+
+
+# float equality 
+print(0.1 + 0.1 + 0.1 == 0.3)   # -> False
+print(round(0.1 + 0.1 + 0.1, 5) == round(0.3, 5))   # -> True
+
+
+# arg, kwargs 
+# *arg : scoops up any positional args 
+# **kwargs : scoops up any keyword args 
+# *args / * : indicates no more positional args 
+def func(*arg, **kwargs):    # -> func(1, 2, a=10, b=20)
+    # code
+    pass 
+
+def func(**kwargs):    # -> func(a=1, b=2)
+    # code 
+    pass 
+
+def func(a, b=2, c=3, *, kw1, kw2=2):
+    # code 
+    pass 
+
+def my_func(a,   # 'a string',
+            b,   # int = 1,
+            *args, # 'additional positional args',
+            kw1,   # 'first keyword-only arg',
+            kw2,   # 'second keyword-only arg = 10',
+            **kwargs) -> str:   # 'additional keyword-only arg') -> str:
+    """ do something
+    """
+    pass 
+
+
+# map - comprehension alternative 
+l = [2,3,4]
+def sq(x):
+    return x**2 
+list(map(sq, l))
+
+# above is equivalent to below 
+print(list(map(lambda  x: x**2, l)))   # -> [4, 9, 16]
+
+# using a loop
+l = [5,8,6,10,9]
+
+# max value in sequence 
+max_value = lambda a, b: a if a > b else b 
+def max_sequence(sequence):
+    result = sequence[0]
+    for e in sequence[1:]:
+        result = max_value(result, e)
+    return result 
+
+print(max_sequence(l))
+
+# reduce 
+def _reduce(fn, sequence):
+    result = sequence[0]
+    for x in sequence[1:]:
+        result = fn(result, x)
+    return result 
+
+l = [5,8,6,10,9]
+print(_reduce(lambda a, b: a if a > b else b, l))  # -> 10
+print(_reduce(lambda a, b: a if a < b else b, l))  # -> 5
+add = lambda a, b: a+b 
+print(_reduce(add, l))   # -> 38
+
+from functools import reduce 
+print(reduce(lambda a, b: a * b, range(1, 5+1)))   # -> 120
+
+
+# packages are modules, but modules are not necessarily packages 
+# they can contain modules, packages (called sub-packages)
+# __init__.py 
+# create a directory whose name will be the package name 
+# create a file called __init__.py inside that directory 
+# __init__.py tells this is a package not a standard directory 
+

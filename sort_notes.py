@@ -34,6 +34,8 @@ print(insertion_sort(nums))
 # [1, 2, 3, 4, 5, 6]
 
 
+
+
 # Merge sort, divide and conquer
 # split arry into half, till single element array 
 # sort single element array

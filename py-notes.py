@@ -18,6 +18,7 @@ https://docs.python.org/dev/download.html
 # random integer generation k=10 
 from encodings import utf_8
 from random import choices
+from xml.dom.pulldom import END_DOCUMENT
 arr = choices(range(10), k=10)       # when use [choices], it will be [[2,2,...]]
 print(f"{arr=}")
 # arr=[2, 2, 4, 1, 8, 4, 8, 9, 1, 7]
@@ -808,3 +809,91 @@ print(reduce(lambda a, b: a * b, range(1, 5+1)))   # -> 120
 # create a file called __init__.py inside that directory 
 # __init__.py tells this is a package not a standard directory 
 
+
+# palindrome
+def isPalindrome(word):
+    return word == word[::-1]
+
+
+# divide and multiply by 2 
+print(10 >> 1)   # -> (== 10 / 2)  5 
+print(10 << 1)   # -> ((==10 * 2) 20
+
+
+# class define constants 
+class CheckType:
+    HEAD = 0 
+    END = 42 
+    SENTINEL = 20
+
+print(CheckType.HEAD, CheckType.END, CheckType.SENTINEL)    # -> 0 42 20
+
+
+# dict get largest value 
+d = {3: 3, 1: 1, 0: 1}
+(3, 3)
+print(max(d.items(), key=lambda k: k[1]))  # -> (3, 3)
+print(max(d.items(), key=lambda k: k[1])[0])  # -> 3
+
+
+# int swap values 
+def swap(a: int, b: int) -> int:
+    a = a^b
+    b = a^b
+    a = a^b
+    return a, b
+
+a, b = 4, 2
+print("before ", a, b)
+a, b = swap(a, b)
+print("after", a, b)
+# before  4 2
+# after 2 4
+
+
+# list change value inside function 
+from typing import List
+def change_list(arr: List[int]):
+    print(type(arr), "type inside change_list()")
+    arr.append(42)
+    for i in range(len(arr)):
+        for j in range(i, len(arr)):
+            if arr[j] < arr[i]:
+                arr[i], arr[j] = arr[j], arr[i]
+    print(arr, id(arr), "inside change_list()")
+
+arr = [8,6,2,3,4,]
+print(arr, id(arr), "before change_list()")
+change_list(arr)
+print(arr, id(arr), "after change_list()")
+# [8, 6, 2, 3, 4] 140679103922560 before change_list()
+# <class 'list'> type inside change_list()
+# [2, 3, 4, 6, 8, 42] 140679103922560 inside change_list()
+# [2, 3, 4, 6, 8, 42] 140679103922560 after change_list()
+
+
+# binary search mid index number, safe calculation
+L = 100
+R = 300
+# mid = (L + R) // 2   # (300 //2 = 150), 300 > R, not safe for huge number, 
+# mid = L + (R - L)//2   # (100 + 100//2) = 150,  mid < R always, safe
+mid = L + ((R-L)>>1)  # bit operation is faster than division
+print(mid)   # -> 200
+
+print(bin(6), bin(3))   # ('0b110', '0b11'), move 1 bit to right, 6 -> 3
+
+
+# ^ exclusive or operation 
+N = 42
+Z = 0 
+N ^ 0 == N
+N ^ N == 0 
+
+# & find the right most bit of one (1)
+negate = lambda x: x ^ True
+a = 42
+print(a)
+print(bin(a))               # -> 0b101010
+print(bin(~a+1))
+print(bin(a & (~a + 1)))    # ->       10   (a & ((~a) + 1)) -> a & (-a)
+print(bin(a & (~a)))        # ->        0
